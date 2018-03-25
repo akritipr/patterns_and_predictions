@@ -17,6 +17,10 @@ renameBasicFeaturesVal <- function(x){
    x <-paste("A", 51:61, sep="")
 }
 
+renameTextualFeaturesVal <- function(x){
+  x <-paste("A", 63:263, sep="")
+}
+
 
 names(basic_features) <- renameBasicFeaturesVal(names(basic_features))
 names(textual_feature) <- renameTextualFeaturesVal(names(textual_feature))
@@ -63,39 +67,33 @@ summary(fit.basic.features.train)
 
 #Predict values for Test data 1
 #Calculating the values of y with the coefficients calculated in the training model and the values of the variables from the test data
-pred_basic_features_1 <-predict(fit.basic.features.train,basic_features_test1,se.fit=TRUE)
-pred_basic_features_1$fit
-basic_features_test1$A61
-
 #Comparing the predicted y values with the actual y values in the test data
+pred_basic_features_1 <-predict(fit.basic.features.train,basic_features_test1,se.fit=TRUE)
 MSE = mean((basic_features_test1$A61 - pred_basic_features_1$fit)^2)
 print(cat("MSE For Experiment 1: ",MSE))
 #More the variation, worse the model
 
-
 #Predict values for Test data 2
 pred_basic_features_2 <-predict(fit.basic.features.train,basic_features_test2,se.fit=TRUE)
-pred_basic_features_2$fit
-basic_features_test2$A61
 MSE = mean((basic_features_test2$A61 - pred_basic_features_2$fit)^2)
 print(cat("MSE For Experiment 2: ",MSE))
 
 
 #Predict values for Test data 3
 pred_basic_features_3 <-predict(fit.basic.features.train,basic_features_test3,se.fit=TRUE)
-pred_basic_features_3$fit
-basic_features_test3$A61
 MSE = mean((basic_features_test3$A61 - pred_basic_features_3$fit)^2)
 print(cat("MSE For Experiment 3: ",MSE))
 
 
 #Predict values for Test data 4
 pred_basic_features_4 <-predict(fit.basic.features.train,basic_features_test4,se.fit=TRUE)
-pred_basic_features_4$fit
-basic_features_test4$A61
 MSE = mean((basic_features_test4$A61 - pred_basic_features_4$fit)^2)
 print(cat("MSE For Experiment 4: ",MSE))
 
+#Predict values for the Training model
+pred_basic_features <-predict(fit.basic.features.train,basic_features,se.fit=TRUE)
+MSE = mean((basic_features$A61 - pred_basic_features$fit)^2)
+print(cat("MSE For Basic Features train model: ",MSE))
 ################################
 #Logistic Regression
 #Calculate mean to use it for changing the target variable to Binary (Remove all NA values)
@@ -115,10 +113,7 @@ basic_features_mean <- mean(basic_features$A61, NA.rm = TRUE)
 #Alternative way to add 0 or 1 on the basis of the mean
 basic_features_log_n <- basic_features
 basic_features_log_n$A61 <- sapply(basic_features_log_n$A61, function(x) {ifelse(x >= basic_features_mean, 1, 0)})
-basic_features_log_n
-
 logfit.basic.features.train <- glm(formula = A61 ~ A51+A52+A53+A54+A55+A56+A57+A58+A59+A60, data = basic_features_log_n, family=binomial())
-
 summary(logfit.basic.features.train)
 
 #Change binary values for test data target variables
@@ -152,44 +147,33 @@ summary(fit.textual.features.train)
 
 #Test data 1
 pred_textual_features_1 <-predict(fit.textual.features.train,textual_features_test1,se.fit=TRUE)
-pred_textual_features_1$fit
-textual_features_test1$A263
-
 MSE = mean((textual_features_test1$A263 - pred_textual_features_1$fit)^2)
-MSE
 print(cat("MSE For Experiment 2: ",MSE))
 
 
 #Test data 2
 pred_textual_features_2 <-predict(fit.textual.features.train,textual_features_test2,se.fit=TRUE)
-pred_textual_features_2$fit
-textual_features_test2$A263
-
 MSE = mean((textual_features_test2$A263 - pred_textual_features_2$fit)^2)
-MSE
 print(cat("MSE For Experiment 2: ",MSE))
 
 
 
 #Test data 3
 pred_textual_features_3 <-predict(fit.textual.features.train,textual_features_test3,se.fit=TRUE)
-pred_textual_features_3$fit
-textual_features_test3$A263
-
 MSE = mean((textual_features_test3$A263 - pred_textual_features_3$fit)^2)
-MSE
 print(cat("MSE For Experiment 2: ",MSE))
 
 
 #Test data 4
 pred_textual_features_4 <-predict(fit.textual.features.train,textual_features_test4,se.fit=TRUE)
-pred_textual_features_4$fit
-textual_features_test4$A263
-
 MSE = mean((textual_features_test4$A263 - pred_textual_features_4$fit)^2)
-MSE
 print(cat("MSE For Experiment 2: ",MSE))
 
+
+#Train data
+pred_textual_features <-predict(fit.textual.features.train,textual_features,se.fit=TRUE)
+MSE = mean((textual_features$A263 - pred_textual_features$fit)^2)
+print(cat("MSE For Train data: ",MSE))
 ################################
 #Logistic Regression
 
